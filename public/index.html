@@ -652,7 +652,152 @@
             font-size: 0.8em;
             margin-left: 10px;
         }
+ .spots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
 
+        .spot-input {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .spot-input.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .spot-input label {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .spot-textarea {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 10px;
+            color: #e0e0e0;
+            font-family: inherit;
+            font-size: 0.9em;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .spot-textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .player-profile-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #f59e0b;
+        }
+
+        .player-profile-card.reg-strong {
+            border-left-color: #ef4444;
+        }
+
+        .player-profile-card.reg-moyen {
+            border-left-color: #f59e0b;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .profile-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .profile-level {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .profile-level.reg-moyen {
+            background: #f59e0b33;
+            color: #f59e0b;
+        }
+
+        .profile-level.reg-strong {
+            background: #ef444433;
+            color: #ef4444;
+        }
+
+        .profile-spots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .profile-spot {
+            background: #141414;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .profile-spot-title {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .profile-spot-content {
+            color: #ccc;
+            font-size: 0.85em;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        .profile-spot-empty {
+            color: #666;
+            font-style: italic;
+        }
+
+        .profile-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .edit-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .edit-btn:hover {
+            background: #2563eb;
+        }
+
+        .profile-date {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 10px;
+            text-align: right;
+        }
         .loading {
             text-align: center;
             padding: 40px;
@@ -957,57 +1102,75 @@
             <!-- Player Notes Tab -->
             <div id="playerNotes" class="tab-content">
                 <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">➕ Ajouter une note joueur</div>
+                    <div class="session-title" style="margin-bottom: 20px;">➕ Ajouter / Modifier un joueur</div>
                     <div class="input-grid">
                         <div class="input-group">
                             <label for="playerName">Nom du joueur</label>
-                            <input type="text" id="playerName" class="data-input" placeholder="Pseudo">
+                            <input type="text" id="playerName" class="data-input" placeholder="Pseudo" oninput="checkExistingPlayer()">
                         </div>
                         <div class="input-group">
-                            <label for="noteCategory">Catégorie</label>
-                            <select id="noteCategory" class="data-input">
-                                <option value="HU">HU (Heads Up)</option>
-                                <option value="BvB">BvB (Blind vs Blind)</option>
-                                <option value="BBvsBU">BB vs BU</option>
-                                <option value="BBvsSB">BB vs SB</option>
-                                <option value="BUvsBB">BU vs BB</option>
-                                <option value="SBvsBB">SB vs BB</option>
-                                <option value="3way">3-Way</option>
-                                <option value="general">Général</option>
+                            <label for="playerLevel">Niveau</label>
+                            <select id="playerLevel" class="data-input">
+                                <option value="reg-moyen">🟠 Reg Moyen</option>
+                                <option value="reg-strong">🔴 Reg Strong</option>
                             </select>
                         </div>
                     </div>
-                    <div class="input-group" style="margin-top: 15px;">
-                        <label for="playerNoteText">Note</label>
-                        <textarea id="playerNoteText" class="notes-area" style="min-height: 80px;" placeholder="Ex: Limp/fold trop souvent en SB, over-fold vs 3bet..."></textarea>
+                    
+                    <div class="spots-grid">
+                        <div class="spot-input">
+                            <label for="spotBU">BU</label>
+                            <textarea id="spotBU" class="spot-textarea" placeholder="Notes sur son jeu en BU..."></textarea>
+                        </div>
+                        <div class="spot-input">
+                            <label for="spotBBvsBU">BB vs BU</label>
+                            <textarea id="spotBBvsBU" class="spot-textarea" placeholder="Notes sur son jeu BB vs BU..."></textarea>
+                        </div>
+                        <div class="spot-input">
+                            <label for="spotBvBSB">BvB SB</label>
+                            <textarea id="spotBvBSB" class="spot-textarea" placeholder="Notes sur son jeu BvB en SB..."></textarea>
+                        </div>
+                        <div class="spot-input">
+                            <label for="spotBvBBB">BvB BB</label>
+                            <textarea id="spotBvBBB" class="spot-textarea" placeholder="Notes sur son jeu BvB en BB..."></textarea>
+                        </div>
+                        <div class="spot-input">
+                            <label for="spotHUSB">HU SB</label>
+                            <textarea id="spotHUSB" class="spot-textarea" placeholder="Notes sur son jeu HU en SB..."></textarea>
+                        </div>
+                        <div class="spot-input">
+                            <label for="spotHUBB">HU BB</label>
+                            <textarea id="spotHUBB" class="spot-textarea" placeholder="Notes sur son jeu HU en BB..."></textarea>
+                        </div>
+                        <div class="spot-input full-width">
+                            <label for="spot3Way">3-Way Général</label>
+                            <textarea id="spot3Way" class="spot-textarea" placeholder="Notes sur son jeu en 3-way..."></textarea>
+                        </div>
                     </div>
-                    <button class="btn btn-start" style="margin-top: 15px;" onclick="addPlayerNote()">Ajouter la note</button>
+                    
+                    <button class="btn btn-start" style="margin-top: 20px; width: 100%;" onclick="savePlayerProfile()">💾 Sauvegarder le profil</button>
+                    <div id="playerStatus" style="margin-top: 10px; text-align: center; color: #888; font-size: 0.9em;"></div>
                 </div>
 
                 <div class="session-card">
                     <div class="session-title" style="margin-bottom: 20px;">🔍 Rechercher un joueur</div>
                     <div class="input-group">
-                        <input type="text" id="searchPlayer" class="data-input" placeholder="Rechercher par nom..." oninput="searchPlayerNotes()">
+                        <input type="text" id="searchPlayer" class="data-input" placeholder="Rechercher par nom..." oninput="searchPlayerProfiles()">
                     </div>
                     <div class="filter-buttons" style="margin-top: 10px;">
-                        <button class="filter-btn active" onclick="filterNotes('all', this)">Tous</button>
-                        <button class="filter-btn" onclick="filterNotes('HU', this)">HU</button>
-                        <button class="filter-btn" onclick="filterNotes('BvB', this)">BvB</button>
-                        <button class="filter-btn" onclick="filterNotes('BBvsBU', this)">BB vs BU</button>
-                        <button class="filter-btn" onclick="filterNotes('BBvsSB', this)">BB vs SB</button>
-                        <button class="filter-btn" onclick="filterNotes('3way', this)">3-Way</button>
-                        <button class="filter-btn" onclick="filterNotes('general', this)">Général</button>
+                        <button class="filter-btn active" onclick="filterProfiles('all', this)">Tous</button>
+                        <button class="filter-btn" onclick="filterProfiles('reg-moyen', this)">🟠 Reg Moyen</button>
+                        <button class="filter-btn" onclick="filterProfiles('reg-strong', this)">🔴 Reg Strong</button>
                     </div>
                 </div>
 
                 <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">📚 Notes enregistrées</div>
-                    <div class="player-notes-list" id="playerNotesList">
-                        <div class="loading">Chargement...</div>
+                    <div class="session-title" style="margin-bottom: 20px;">📚 Fiches joueurs (<span id="playerCount">0</span>)</div>
+                    <div class="player-profiles-list" id="playerProfilesList">
+                        <div class="history-empty">Aucun joueur enregistré</div>
                     </div>
                 </div>
             </div>
-
             <!-- Session Notes Tab -->
             <div id="notes" class="tab-content">
                 <div class="session-card">
@@ -1414,93 +1577,204 @@
         }
 
         // Player notes functions
-        async function addPlayerNote() {
-            const name = document.getElementById('playerName').value.trim();
-            const category = document.getElementById('noteCategory').value;
-            const text = document.getElementById('playerNoteText').value.trim();
+        let currentProfileFilter = 'all';
+        let editingPlayerId = null;
 
-            if (!name || !text) {
-                alert('Veuillez remplir le nom et la note');
+        function checkExistingPlayer() {
+            const name = document.getElementById('playerName').value.trim().toLowerCase();
+            const statusEl = document.getElementById('playerStatus');
+            
+            if (!name) {
+                statusEl.textContent = '';
+                editingPlayerId = null;
+                clearProfileForm();
                 return;
             }
 
+            const existing = allPlayerNotes.find(p => p.player_name.toLowerCase() === name);
+            if (existing) {
+                statusEl.textContent = '📝 Joueur existant - Les modifications mettront à jour sa fiche';
+                statusEl.style.color = '#f59e0b';
+                editingPlayerId = existing.id;
+                loadProfileToForm(existing);
+            } else {
+                statusEl.textContent = '✨ Nouveau joueur';
+                statusEl.style.color = '#10b981';
+                editingPlayerId = null;
+            }
+        }
+
+        function loadProfileToForm(profile) {
+            document.getElementById('playerLevel').value = profile.category || 'reg-moyen';
+            
+            let spots = {};
             try {
-                const res = await fetch('/api/player-notes', {
+                spots = JSON.parse(profile.note_text || '{}');
+            } catch(e) {
+                spots = {};
+            }
+            
+            document.getElementById('spotBU').value = spots.BU || '';
+            document.getElementById('spotBBvsBU').value = spots.BBvsBU || '';
+            document.getElementById('spotBvBSB').value = spots.BvBSB || '';
+            document.getElementById('spotBvBBB').value = spots.BvBBB || '';
+            document.getElementById('spotHUSB').value = spots.HUSB || '';
+            document.getElementById('spotHUBB').value = spots.HUBB || '';
+            document.getElementById('spot3Way').value = spots.ThreeWay || '';
+        }
+
+        function clearProfileForm() {
+            document.getElementById('playerLevel').value = 'reg-moyen';
+            document.getElementById('spotBU').value = '';
+            document.getElementById('spotBBvsBU').value = '';
+            document.getElementById('spotBvBSB').value = '';
+            document.getElementById('spotBvBBB').value = '';
+            document.getElementById('spotHUSB').value = '';
+            document.getElementById('spotHUBB').value = '';
+            document.getElementById('spot3Way').value = '';
+        }
+
+        async function savePlayerProfile() {
+            const name = document.getElementById('playerName').value.trim();
+            if (!name) {
+                alert('Veuillez entrer le nom du joueur');
+                return;
+            }
+
+            const level = document.getElementById('playerLevel').value;
+            const spots = {
+                BU: document.getElementById('spotBU').value.trim(),
+                BBvsBU: document.getElementById('spotBBvsBU').value.trim(),
+                BvBSB: document.getElementById('spotBvBSB').value.trim(),
+                BvBBB: document.getElementById('spotBvBBB').value.trim(),
+                HUSB: document.getElementById('spotHUSB').value.trim(),
+                HUBB: document.getElementById('spotHUBB').value.trim(),
+                ThreeWay: document.getElementById('spot3Way').value.trim()
+            };
+
+            try {
+                let res;
+                if (editingPlayerId) {
+                    // Delete old and create new (simpler than adding PUT endpoint)
+                    await fetch(`/api/player-notes/${editingPlayerId}`, { method: 'DELETE' });
+                }
+                
+                // Create new
+                res = await fetch('/api/player-notes', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        playerName: name,
-                        category,
-                        noteText: text
+                    body: JSON.stringify({ 
+                        playerName: name, 
+                        category: level,
+                        noteText: JSON.stringify(spots)
                     })
                 });
 
                 if (res.ok) {
-                    const data = await res.json();
-                    allPlayerNotes.unshift(data.note);
-                    renderPlayerNotes();
-
+                    alert(editingPlayerId ? 'Profil mis à jour !' : 'Profil créé !');
                     document.getElementById('playerName').value = '';
-                    document.getElementById('playerNoteText').value = '';
+                    clearProfileForm();
+                    document.getElementById('playerStatus').textContent = '';
+                    editingPlayerId = null;
+                    await loadPlayerNotes();
                 }
             } catch (err) {
-                alert('Erreur lors de l\'ajout');
+                alert('Erreur lors de la sauvegarde');
             }
         }
 
         function renderPlayerNotes() {
-            const container = document.getElementById('playerNotesList');
+            const container = document.getElementById('playerProfilesList');
             const search = document.getElementById('searchPlayer').value.toLowerCase();
             
             let filtered = allPlayerNotes;
-            if (currentFilter !== 'all') {
-                filtered = filtered.filter(n => n.category === currentFilter);
+            if (currentProfileFilter !== 'all') {
+                filtered = filtered.filter(p => p.category === currentProfileFilter);
             }
             if (search) {
-                filtered = filtered.filter(n => n.player_name.toLowerCase().includes(search));
+                filtered = filtered.filter(p => p.player_name.toLowerCase().includes(search));
             }
 
+            document.getElementById('playerCount').textContent = filtered.length;
+
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="history-empty">Aucune note trouvée</div>';
+                container.innerHTML = '<div class="history-empty">Aucun joueur trouvé</div>';
                 return;
             }
 
-            container.innerHTML = filtered.map(note => {
-                const date = new Date(note.created_at).toLocaleDateString('fr-FR', {
+            container.innerHTML = filtered.map(profile => {
+                let spots = {};
+                try {
+                    spots = JSON.parse(profile.note_text || '{}');
+                } catch(e) {
+                    spots = {};
+                }
+                
+                const level = profile.category || 'reg-moyen';
+                const levelText = level === 'reg-strong' ? '🔴 Reg Strong' : '🟠 Reg Moyen';
+                const date = new Date(profile.created_at).toLocaleDateString('fr-FR', {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric'
                 });
 
-                return `
-                    <div class="player-note-item">
-                        <div class="player-note-header">
-                            <span class="player-note-name">${note.player_name}</span>
-                            <div>
-                                <span class="player-note-category">${note.category}</span>
-                                <button class="delete-btn" onclick="deletePlayerNote(${note.id})">✕</button>
-                            </div>
+                const spotsList = [
+                    { key: 'BU', label: 'BU', value: spots.BU },
+                    { key: 'BBvsBU', label: 'BB vs BU', value: spots.BBvsBU },
+                    { key: 'BvBSB', label: 'BvB SB', value: spots.BvBSB },
+                    { key: 'BvBBB', label: 'BvB BB', value: spots.BvBBB },
+                    { key: 'HUSB', label: 'HU SB', value: spots.HUSB },
+                    { key: 'HUBB', label: 'HU BB', value: spots.HUBB },
+                    { key: 'ThreeWay', label: '3-Way', value: spots.ThreeWay }
+                ];
+
+                const spotsHtml = spotsList
+                    .filter(s => s.value)
+                    .map(s => `
+                        <div class="profile-spot">
+                            <div class="profile-spot-title">${s.label}</div>
+                            <div class="profile-spot-content">${s.value}</div>
                         </div>
-                        <div class="player-note-text">${note.note_text}</div>
-                        <div class="player-note-date">${date}</div>
+                    `).join('');
+
+                return `
+                    <div class="player-profile-card ${level}">
+                        <div class="profile-header">
+                            <span class="profile-name">${profile.player_name}</span>
+                            <span class="profile-level ${level}">${levelText}</span>
+                        </div>
+                        <div class="profile-spots">
+                            ${spotsHtml || '<div class="profile-spot-empty">Aucune note pour ce joueur</div>'}
+                        </div>
+                        <div class="profile-actions">
+                            <button class="edit-btn" onclick="editProfile('${profile.player_name}')">✏️ Modifier</button>
+                            <button class="delete-btn" onclick="deletePlayerNote(${profile.id})">🗑️ Supprimer</button>
+                        </div>
+                        <div class="profile-date">Ajouté le ${date}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        function filterNotes(category, btn) {
-            currentFilter = category;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        function editProfile(playerName) {
+            document.getElementById('playerName').value = playerName;
+            checkExistingPlayer();
+            document.getElementById('playerNotes').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function filterProfiles(level, btn) {
+            currentProfileFilter = level;
+            document.querySelectorAll('#playerNotes .filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderPlayerNotes();
         }
 
-        function searchPlayerNotes() {
+        function searchPlayerProfiles() {
             renderPlayerNotes();
         }
 
         async function deletePlayerNote(id) {
-            if (!confirm('Supprimer cette note ?')) return;
+            if (!confirm('Supprimer ce joueur ?')) return;
 
             try {
                 await fetch(`/api/player-notes/${id}`, { method: 'DELETE' });
