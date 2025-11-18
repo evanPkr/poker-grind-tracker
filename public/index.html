@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poker Grind Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -254,200 +255,91 @@
         }
 
         .session-title {
-            font-size: 1.3em;
             color: #10b981;
+            font-size: 1.3em;
+            font-weight: 600;
         }
 
-        .session-time {
+        .timer-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .timer {
             font-size: 2em;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.95em;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-start {
-            background: #10b981;
-            color: #0a0a0a;
-        }
-
-        .btn-start:hover {
-            background: #059669;
-        }
-
-        .btn-pause {
-            background: #f59e0b;
-            color: #0a0a0a;
-        }
-
-        .btn-pause:hover {
-            background: #d97706;
-        }
-
-        .btn-reset {
-            background: #374151;
-            color: #e0e0e0;
-        }
-
-        .btn-reset:hover {
-            background: #4b5563;
+            font-weight: 700;
+            color: #10b981;
+            font-family: 'Courier New', monospace;
         }
 
         .timer-controls {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
         }
 
-        /* Progress */
-        .progress-section {
-            margin-top: 20px;
-        }
-
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            color: #888;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: #2a2a2a;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981, #059669);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        /* Summary */
-        .daily-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .summary-card {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #2a2a2a;
-        }
-
-        .summary-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #10b981;
-            margin-bottom: 5px;
-        }
-
-        .summary-label {
-            color: #888;
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
             font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
-        /* Inputs */
-        .input-grid {
+        .btn-primary {
+            background: #10b981;
+            color: #0a0a0a;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            margin-bottom: 20px;
         }
 
         .input-group label {
+            display: block;
             color: #888;
+            margin-bottom: 8px;
             font-size: 0.9em;
         }
 
-        .data-input {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 6px;
-            padding: 10px 12px;
-            color: #e0e0e0;
-            font-size: 1em;
-            font-family: inherit;
-        }
-
-        .data-input:focus {
-            outline: none;
-            border-color: #10b981;
-        }
-
-        select.data-input {
-            cursor: pointer;
-        }
-
-        /* Checklist */
-        .checklist {
-            list-style: none;
-        }
-
-        .checklist li {
-            padding: 12px 0;
-            border-bottom: 1px solid #2a2a2a;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .checklist li:last-child {
-            border-bottom: none;
-        }
-
-        .checkbox {
-            width: 22px;
-            height: 22px;
-            accent-color: #10b981;
-            cursor: pointer;
-        }
-
-        .checklist label {
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .checklist li.completed label {
-            text-decoration: line-through;
-            color: #666;
-        }
-
-        /* Notes */
-        .notes-area {
+        .input-group input {
             width: 100%;
+            padding: 12px;
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
             border-radius: 8px;
-            padding: 15px;
             color: #e0e0e0;
-            font-family: inherit;
             font-size: 1em;
-            resize: vertical;
-            min-height: 120px;
         }
 
-        .notes-area:focus {
+        .input-group input:focus {
             outline: none;
             border-color: #10b981;
         }
@@ -455,85 +347,58 @@
         /* Stats */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
             background: #141414;
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px;
             border: 1px solid #2a2a2a;
-        }
-
-        .stat-title {
-            color: #888;
-            margin-bottom: 15px;
-            font-size: 0.95em;
-        }
-
-        .stat-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #10b981;
-        }
-
-        .stat-subtitle {
-            color: #666;
-            margin-top: 5px;
-            font-size: 0.85em;
-        }
-
-        /* Bankroll */
-        .bankroll-display {
-            background: linear-gradient(135deg, #0d3d2e, #1a1a1a);
-            border-radius: 12px;
-            padding: 30px;
             text-align: center;
-            border: 2px solid #10b981;
         }
 
-        .bankroll-label {
-            display: block;
+        .stat-label {
             color: #888;
-            font-size: 1em;
+            font-size: 0.9em;
             margin-bottom: 10px;
         }
 
-        .bankroll-value {
-            font-size: 3em;
-            font-weight: bold;
+        .stat-value {
             color: #10b981;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .stat-value.negative {
+            color: #ef4444;
         }
 
         /* History */
-        .history-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
         .history-item {
             background: #1a1a1a;
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #10b981;
+            margin-bottom: 12px;
+            border: 1px solid #2a2a2a;
         }
 
         .history-item.negative {
-            border-left-color: #ef4444;
+            border-left: 4px solid #ef4444;
         }
 
         .history-date {
             color: #888;
-            font-size: 0.85em;
-            margin-bottom: 8px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
         }
 
         .history-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
         }
 
         .history-stat {
@@ -541,8 +406,9 @@
         }
 
         .history-stat-value {
-            font-weight: bold;
             color: #10b981;
+            font-weight: 600;
+            font-size: 1.1em;
         }
 
         .history-stat-value.negative {
@@ -550,51 +416,74 @@
         }
 
         .history-stat-label {
-            font-size: 0.75em;
             color: #666;
+            font-size: 0.8em;
+            margin-top: 4px;
         }
 
         .history-empty {
             text-align: center;
             color: #666;
-            padding: 20px;
+            padding: 40px;
+            font-style: italic;
         }
 
-        /* Player notes */
-        .filter-buttons {
+        /* Bankroll */
+        .bankroll-display {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .bankroll-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .bankroll-amount {
+            color: #fff;
+            font-size: 3em;
+            font-weight: 700;
+        }
+
+        /* Player Notes */
+        .note-filters {
             display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 8px;
         }
 
         .filter-btn {
-            padding: 6px 12px;
+            padding: 8px 16px;
             background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 4px;
             color: #888;
+            border: none;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85em;
             transition: all 0.3s ease;
         }
 
         .filter-btn:hover {
             background: #2a2a2a;
-            color: #e0e0e0;
         }
 
         .filter-btn.active {
             background: #10b981;
             color: #0a0a0a;
-            border-color: #10b981;
+            font-weight: 600;
         }
 
         .player-note-item {
             background: #1a1a1a;
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #10b981;
+            margin-bottom: 12px;
+            border: 1px solid #2a2a2a;
         }
 
         .player-note-header {
@@ -605,222 +494,133 @@
         }
 
         .player-note-name {
-            font-weight: bold;
             color: #10b981;
+            font-weight: 600;
             font-size: 1.1em;
         }
 
         .player-note-category {
             background: #374151;
-            color: #9ca3af;
-            padding: 4px 8px;
+            color: #e0e0e0;
+            padding: 4px 12px;
             border-radius: 4px;
             font-size: 0.8em;
+            margin-right: 10px;
         }
 
         .player-note-text {
             color: #e0e0e0;
-            line-height: 1.5;
+            line-height: 1.6;
+            margin-bottom: 10px;
         }
 
         .player-note-date {
             color: #666;
             font-size: 0.8em;
-            margin-top: 8px;
         }
 
         .delete-btn {
-            background: #ef4444;
-            color: white;
+            background: #dc2626;
+            color: #fff;
             border: none;
-            padding: 4px 8px;
             border-radius: 4px;
+            padding: 4px 8px;
             cursor: pointer;
-            font-size: 0.8em;
-            margin-left: 10px;
+            font-size: 0.9em;
         }
 
         .delete-btn:hover {
-            background: #dc2626;
+            background: #b91c1c;
         }
 
-        .optional-badge {
-            background: #374151;
-            color: #9ca3af;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
- .spots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+        /* Settings */
+        .settings-card {
+            background: #141414;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #2a2a2a;
         }
 
-        .spot-input {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .spot-input.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .spot-input label {
+        .settings-card h3 {
             color: #10b981;
-            font-weight: 600;
-            font-size: 0.95em;
+            margin-bottom: 15px;
         }
 
-        .spot-textarea {
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            border-radius: 6px;
-            padding: 10px;
+            border-radius: 8px;
             color: #e0e0e0;
             font-family: inherit;
-            font-size: 0.9em;
+            font-size: 1em;
             resize: vertical;
-            min-height: 80px;
         }
 
-        .spot-textarea:focus {
+        textarea:focus {
             outline: none;
             border-color: #10b981;
         }
 
-        .player-profile-card {
+        .checklist {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .checklist li {
+            padding: 12px;
+            margin-bottom: 8px;
             background: #1a1a1a;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 5px solid #f59e0b;
-        }
-
-        .player-profile-card.reg-strong {
-            border-left-color: #ef4444;
-        }
-
-        .player-profile-card.reg-moyen {
-            border-left-color: #f59e0b;
-        }
-
-        .profile-header {
+            border-radius: 6px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        .profile-name {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .profile-level {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-
-        .profile-level.reg-moyen {
-            background: #f59e0b33;
-            color: #f59e0b;
-        }
-
-        .profile-level.reg-strong {
-            background: #ef444433;
-            color: #ef4444;
-        }
-
-        .profile-spots {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 12px;
         }
 
-        .profile-spot {
-            background: #141414;
-            border-radius: 8px;
-            padding: 12px;
+        .checklist li.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
         }
 
-        .profile-spot-title {
-            color: #10b981;
-            font-weight: 600;
-            font-size: 0.9em;
-            margin-bottom: 8px;
-        }
-
-        .profile-spot-content {
-            color: #ccc;
-            font-size: 0.85em;
-            line-height: 1.4;
-            white-space: pre-wrap;
-        }
-
-        .profile-spot-empty {
-            color: #666;
-            font-style: italic;
-        }
-
-        .profile-actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .edit-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+        .checklist input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            font-size: 0.85em;
         }
 
-        .edit-btn:hover {
-            background: #2563eb;
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .history-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .timer-display {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
 
-        .profile-date {
-            color: #666;
-            font-size: 0.8em;
-            margin-top: 10px;
-            text-align: right;
-        }
         .loading {
             text-align: center;
             padding: 40px;
             color: #888;
         }
 
-        @media (max-width: 768px) {
-            .tabs {
-                flex-wrap: wrap;
-            }
-            
-            .tab {
-                flex: 1;
-                text-align: center;
-                padding: 10px 15px;
-                font-size: 0.9em;
-            }
+        #app {
+            display: none;
+        }
 
-            header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
+        #app.show {
+            display: block;
         }
     </style>
 </head>
@@ -828,381 +628,291 @@
     <!-- Auth Screen -->
     <div id="authScreen" class="auth-container">
         <div class="auth-box">
-            <h1 class="auth-title">🎰 Poker Grind Tracker</h1>
-            <p class="auth-subtitle">Connectez-vous pour tracker vos sessions</p>
-            
-            <div class="auth-error" id="authError"></div>
+            <div class="auth-title">🎯 Poker Tracker</div>
+            <div class="auth-subtitle">Gère ton grind comme un pro</div>
+
+            <div id="authError" class="auth-error"></div>
 
             <div class="auth-tabs">
                 <button class="auth-tab active" onclick="switchAuthTab('login')">Connexion</button>
                 <button class="auth-tab" onclick="switchAuthTab('register')">Inscription</button>
             </div>
 
+            <!-- Login Form -->
             <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label for="loginUsername">Nom d'utilisateur ou Email</label>
-                    <input type="text" id="loginUsername" class="form-input" required>
+                    <label>Email</label>
+                    <input type="email" class="form-input" id="loginEmail" required>
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Mot de passe</label>
-                    <input type="password" id="loginPassword" class="form-input" required>
+                    <label>Mot de passe</label>
+                    <input type="password" class="form-input" id="loginPassword" required>
                 </div>
-                <button type="submit" class="auth-btn" id="loginBtn">Se connecter</button>
+                <button type="submit" class="auth-btn">Se connecter</button>
             </form>
 
+            <!-- Register Form -->
             <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label for="regUsername">Nom d'utilisateur</label>
-                    <input type="text" id="regUsername" class="form-input" required minlength="3">
+                    <label>Email</label>
+                    <input type="email" class="form-input" id="registerEmail" required>
                 </div>
                 <div class="form-group">
-                    <label for="regEmail">Email</label>
-                    <input type="email" id="regEmail" class="form-input" required>
+                    <label>Mot de passe</label>
+                    <input type="password" class="form-input" id="registerPassword" required minlength="6">
                 </div>
                 <div class="form-group">
-                    <label for="regPassword">Mot de passe (min. 6 caractères)</label>
-                    <input type="password" id="regPassword" class="form-input" required minlength="6">
+                    <label>Pseudo</label>
+                    <input type="text" class="form-input" id="registerUsername" required>
                 </div>
-                <button type="submit" class="auth-btn" id="registerBtn">Créer un compte</button>
+                <button type="submit" class="auth-btn">S'inscrire</button>
             </form>
         </div>
     </div>
 
     <!-- Main App -->
-    <div id="mainApp" style="display: none;">
+    <div id="app">
         <div class="container">
             <header>
                 <div class="header-left">
-                    <h1>🎯 Poker Grind Tracker</h1>
+                    <h1>Poker Grind Tracker</h1>
                     <div class="date-display" id="currentDate"></div>
                 </div>
                 <div class="user-info">
-                    <span class="username" id="displayUsername"></span>
-                    <button class="logout-btn" onclick="handleLogout()">Déconnexion</button>
+                    <span class="username" id="usernameDisplay"></span>
+                    <button class="logout-btn" onclick="logout()">Déconnexion</button>
                 </div>
             </header>
 
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('routine')">Routine</button>
-                <button class="tab" onclick="switchTab('offTable')">Hors Tables</button>
+                <button class="tab active" onclick="switchTab('today')">Aujourd'hui</button>
+                <button class="tab" onclick="switchTab('history')">Historique</button>
                 <button class="tab" onclick="switchTab('bankroll')">Bankroll</button>
-                <button class="tab" onclick="switchTab('stats')">Stats</button>
-                <button class="tab" onclick="switchTab('playerNotes')">Notes Joueurs</button>
-                <button class="tab" onclick="switchTab('notes')">Notes</button>
+                <button class="tab" onclick="switchTab('notes')">Notes Joueurs</button>
+                <button class="tab" onclick="switchTab('settings')">Paramètres</button>
             </div>
 
-            <!-- Routine Tab -->
-            <div id="routine" class="tab-content active">
+            <!-- Today Tab -->
+            <div id="today" class="tab-content active">
+                <!-- Spin Timer -->
                 <div class="session-card">
                     <div class="session-header">
-                        <div class="session-title">🎰 Sessions Spin & Go</div>
-                        <div class="session-time" id="spinTimer">00:00:00</div>
-                    </div>
-                    <div class="progress-section">
-                        <div class="progress-label">
-                            <span>Progression journalière</span>
-                            <span id="spinProgress">0h / 5h</span>
+                        <div class="session-title">⚡ Spin & Go</div>
+                        <div class="timer-display">
+                            <div class="timer" id="spinTimer">00:00:00</div>
+                            <div class="timer-controls">
+                                <button class="btn btn-primary" onclick="startTimer('spin')">▶ Start</button>
+                                <button class="btn btn-secondary" onclick="pauseTimer('spin')">⏸ Pause</button>
+                                <button class="btn btn-danger" onclick="resetTimer('spin')">⏹ Reset</button>
+                            </div>
                         </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="spinProgressBar" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div class="timer-controls">
-                        <button class="btn btn-start" onclick="startTimer('spin')">▶ Démarrer</button>
-                        <button class="btn btn-pause" onclick="pauseTimer('spin')">⏸ Pause</button>
-                        <button class="btn btn-reset" onclick="resetTimer('spin')">↺ Reset</button>
                     </div>
                 </div>
 
+                <!-- Cash Game Timer -->
                 <div class="session-card">
                     <div class="session-header">
-                        <div class="session-title">
-                            💰 Cash Game
-                            <span class="optional-badge">Optionnel</span>
+                        <div class="session-title">💰 Cash Game</div>
+                        <div class="timer-display">
+                            <div class="timer" id="cashTimer">00:00:00</div>
+                            <div class="timer-controls">
+                                <button class="btn btn-primary" onclick="startTimer('cash')">▶ Start</button>
+                                <button class="btn btn-secondary" onclick="pauseTimer('cash')">⏸ Pause</button>
+                                <button class="btn btn-danger" onclick="resetTimer('cash')">⏹ Reset</button>
+                            </div>
                         </div>
-                        <div class="session-time" id="cashTimer">00:00:00</div>
-                    </div>
-                    <div class="progress-section">
-                        <div class="progress-label">
-                            <span>Objectif optionnel</span>
-                            <span id="cashProgress">0h / 1-2h</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="cashProgressBar" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div class="timer-controls">
-                        <button class="btn btn-start" onclick="startTimer('cash')">▶ Démarrer</button>
-                        <button class="btn btn-pause" onclick="pauseTimer('cash')">⏸ Pause</button>
-                        <button class="btn btn-reset" onclick="resetTimer('cash')">↺ Reset</button>
                     </div>
                 </div>
 
-                <div class="daily-summary">
-                    <div class="summary-card">
-                        <div class="summary-value" id="totalToday">0h 0m</div>
-                        <div class="summary-label">Temps total aujourd'hui</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value" id="hourlyRate">0€</div>
-                        <div class="summary-label">€/heure aujourd'hui</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value" id="weekTotal">0h</div>
-                        <div class="summary-label">Total cette semaine</div>
-                    </div>
-                </div>
-
+                <!-- Study Timer -->
                 <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">📊 Données de session</div>
-                    <div class="input-grid">
-                        <div class="input-group">
-                            <label for="gamesPlayed">Games joués</label>
-                            <input type="number" id="gamesPlayed" class="data-input" placeholder="0" onchange="updateSessionData()">
-                        </div>
-                        <div class="input-group">
-                            <label for="handsPlayed">Mains jouées</label>
-                            <input type="number" id="handsPlayed" class="data-input" placeholder="0" onchange="updateSessionData()">
-                        </div>
-                        <div class="input-group">
-                            <label for="earnings">Gains/Pertes (€)</label>
-                            <input type="number" id="earnings" class="data-input" placeholder="0" step="0.01" onchange="updateSessionData()">
+                    <div class="session-header">
+                        <div class="session-title">📚 Étude</div>
+                        <div class="timer-display">
+                            <div class="timer" id="studyTimer">00:00:00</div>
+                            <div class="timer-controls">
+                                <button class="btn btn-primary" onclick="startTimer('study')">▶ Start</button>
+                                <button class="btn btn-secondary" onclick="pauseTimer('study')">⏸ Pause</button>
+                                <button class="btn btn-danger" onclick="resetTimer('study')">⏹ Reset</button>
+                            </div>
                         </div>
                     </div>
-                    <button class="btn btn-start" style="margin-top: 20px; width: 100%;" onclick="saveSession()">💾 Sauvegarder la session</button>
+                </div>
+
+                <!-- Session Input -->
+                <div class="session-card">
+                    <div class="session-title">📊 Résultats de la session</div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Games joués</label>
+                            <input type="number" id="gamesPlayed" min="0" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Mains jouées</label>
+                            <input type="number" id="handsPlayed" min="0" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Gains/Pertes (€)</label>
+                            <input type="number" id="earnings" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSession()">💾 Sauvegarder la session</button>
+                </div>
+
+                <!-- Today Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Volume (Games)</div>
+                        <div class="stat-value" id="todayGames">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Temps de jeu</div>
+                        <div class="stat-value" id="todayHours">0h</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Gains du jour</div>
+                        <div class="stat-value" id="todayEarnings">0€</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">€/h</div>
+                        <div class="stat-value" id="hourlyRate">0€</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Off-Table Work Tab -->
-            <div id="offTable" class="tab-content">
-                <div class="session-card">
-                    <div class="session-header">
-                        <div class="session-title">📚 Travail Hors Tables</div>
-                        <div class="session-time" id="studyTimer">00:00:00</div>
+            <!-- History Tab -->
+            <div id="history" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Games</div>
+                        <div class="stat-value" id="totalGames">0</div>
                     </div>
-                    <div class="progress-section">
-                        <div class="progress-label">
-                            <span>Objectif journalier</span>
-                            <span id="studyProgress">0h / 1h</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="studyProgressBar" style="width: 0%"></div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Mains</div>
+                        <div class="stat-value" id="totalHands">0</div>
                     </div>
-                    <div class="timer-controls">
-                        <button class="btn btn-start" onclick="startTimer('study')">▶ Démarrer</button>
-                        <button class="btn btn-pause" onclick="pauseTimer('study')">⏸ Pause</button>
-                        <button class="btn btn-reset" onclick="resetTimer('study')">↺ Reset</button>
+                    <div class="stat-card">
+                        <div class="stat-label">Temps Total</div>
+                        <div class="stat-value" id="totalHours">0h</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Profit Total</div>
+                        <div class="stat-value" id="totalEarnings">0€</div>
                     </div>
                 </div>
 
                 <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">📋 Checklist du jour</div>
-                    <ul class="checklist">
-                        <li>
-                            <input type="checkbox" class="checkbox" id="check1" onchange="toggleCheck(this)">
-                            <label for="check1">Review des mains de la veille</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" class="checkbox" id="check2" onchange="toggleCheck(this)">
-                            <label for="check2">Training GTO Wizard (Push/Fold)</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" class="checkbox" id="check3" onchange="toggleCheck(this)">
-                            <label for="check3">Analyse spots spécifiques</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" class="checkbox" id="check4" onchange="toggleCheck(this)">
-                            <label for="check4">Update Hand2Note / Stats</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" class="checkbox" id="check5" onchange="toggleCheck(this)">
-                            <label for="check5">Vidéo/Article formation</label>
-                        </li>
-                    </ul>
+                    <div class="session-title">📅 Dernières sessions</div>
+                    <div id="sessionHistory"></div>
                 </div>
             </div>
 
             <!-- Bankroll Tab -->
             <div id="bankroll" class="tab-content">
+                <div class="bankroll-display">
+                    <div class="bankroll-label">Bankroll actuelle</div>
+                    <div class="bankroll-amount" id="currentBankroll">0€</div>
+                </div>
+
                 <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">💰 Gestion de Bankroll</div>
-                    <div class="bankroll-display">
-                        <span class="bankroll-label">Bankroll actuelle</span>
-                        <span class="bankroll-value" id="currentBankroll">0€</span>
-                    </div>
-                    <div class="input-grid" style="margin-top: 20px;">
+                    <div class="session-title">💵 Gérer la bankroll</div>
+                    <div class="form-row">
                         <div class="input-group">
-                            <label for="bankrollInput">Modifier bankroll (€)</label>
-                            <input type="number" id="bankrollInput" class="data-input" placeholder="5000" step="0.01">
-                        </div>
-                        <div class="input-group">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-start" onclick="setBankroll()">Mettre à jour</button>
+                            <label>Nouvelle bankroll (€)</label>
+                            <input type="number" id="bankrollInput" step="0.01" placeholder="0.00">
                         </div>
                     </div>
-                </div>
-
-                <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">📈 Statistiques Bankroll</div>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-title">€/heure (global)</div>
-                            <div class="stat-value" id="globalHourlyRate">0€</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-title">Gains cette semaine</div>
-                            <div class="stat-value" id="weekEarnings">0€</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-title">Gains ce mois</div>
-                            <div class="stat-value" id="monthEarnings">0€</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-title">ROI estimé</div>
-                            <div class="stat-value" id="roiEstimate">0%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">📜 Historique des sessions</div>
-                    <div class="history-list" id="sessionHistory">
-                        <div class="loading">Chargement...</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats Tab -->
-            <div id="stats" class="tab-content">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-title">Heures cette semaine</div>
-                        <div class="stat-value" id="weekHours">0h</div>
-                        <div class="stat-subtitle">sur 35h objectif</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">Games cette semaine</div>
-                        <div class="stat-value" id="weekGames">0</div>
-                        <div class="stat-subtitle">total enregistré</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">Mains cette semaine</div>
-                        <div class="stat-value" id="weekHands">0</div>
-                        <div class="stat-subtitle">total enregistré</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">Sessions cette semaine</div>
-                        <div class="stat-value" id="daysCompleted">0</div>
-                        <div class="stat-subtitle">sessions enregistrées</div>
-                    </div>
+                    <button class="btn btn-primary" onclick="setBankroll()">Mettre à jour</button>
                 </div>
             </div>
 
             <!-- Player Notes Tab -->
-            <div id="playerNotes" class="tab-content">
+            <div id="notes" class="tab-content">
                 <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">➕ Ajouter / Modifier un joueur</div>
-                    <div class="input-grid">
+                    <div class="session-title">📝 Ajouter une note</div>
+                    <div class="form-row">
                         <div class="input-group">
-                            <label for="playerName">Nom du joueur</label>
-                            <input type="text" id="playerName" class="data-input" placeholder="Pseudo" oninput="checkExistingPlayer()">
+                            <label>Nom du joueur</label>
+                            <input type="text" id="playerName" placeholder="Pseudo">
                         </div>
                         <div class="input-group">
-                            <label for="playerLevel">Niveau</label>
-                            <select id="playerLevel" class="data-input">
-                                <option value="reg-moyen">🟠 Reg Moyen</option>
-                                <option value="reg-strong">🔴 Reg Strong</option>
+                            <label>Catégorie</label>
+                            <select id="noteCategory" class="form-input">
+                                <option value="fish">Fish</option>
+                                <option value="reg">Reg</option>
+                                <option value="aggro">Aggro</option>
+                                <option value="nit">Nit</option>
+                                <option value="autre">Autre</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="spots-grid">
-                        <div class="spot-input">
-                            <label for="spotBU">BU</label>
-                            <textarea id="spotBU" class="spot-textarea" placeholder="Notes sur son jeu en BU..."></textarea>
-                        </div>
-                        <div class="spot-input">
-                            <label for="spotBBvsBU">BB vs BU</label>
-                            <textarea id="spotBBvsBU" class="spot-textarea" placeholder="Notes sur son jeu BB vs BU..."></textarea>
-                        </div>
-                        <div class="spot-input">
-                            <label for="spotBvBSB">BvB SB</label>
-                            <textarea id="spotBvBSB" class="spot-textarea" placeholder="Notes sur son jeu BvB en SB..."></textarea>
-                        </div>
-                        <div class="spot-input">
-                            <label for="spotBvBBB">BvB BB</label>
-                            <textarea id="spotBvBBB" class="spot-textarea" placeholder="Notes sur son jeu BvB en BB..."></textarea>
-                        </div>
-                        <div class="spot-input">
-                            <label for="spotHUSB">HU SB</label>
-                            <textarea id="spotHUSB" class="spot-textarea" placeholder="Notes sur son jeu HU en SB..."></textarea>
-                        </div>
-                        <div class="spot-input">
-                            <label for="spotHUBB">HU BB</label>
-                            <textarea id="spotHUBB" class="spot-textarea" placeholder="Notes sur son jeu HU en BB..."></textarea>
-                        </div>
-                        <div class="spot-input full-width">
-                            <label for="spot3Way">3-Way Général</label>
-                            <textarea id="spot3Way" class="spot-textarea" placeholder="Notes sur son jeu en 3-way..."></textarea>
-                        </div>
+                    <div class="form-group">
+                        <label>Note</label>
+                        <textarea id="playerNoteText" placeholder="Tendances, leaks, remarques..."></textarea>
                     </div>
-                    
-                    <button class="btn btn-start" style="margin-top: 20px; width: 100%;" onclick="savePlayerProfile()">💾 Sauvegarder le profil</button>
-                    <div id="playerStatus" style="margin-top: 10px; text-align: center; color: #888; font-size: 0.9em;"></div>
+                    <button class="btn btn-primary" onclick="addPlayerNote()">Ajouter la note</button>
                 </div>
 
                 <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">🔍 Rechercher un joueur</div>
-                    <div class="input-group">
-                        <input type="text" id="searchPlayer" class="data-input" placeholder="Rechercher par nom..." oninput="searchPlayerProfiles()">
+                    <div class="session-title">🔍 Rechercher</div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <input type="text" id="searchPlayer" placeholder="Rechercher un joueur..." oninput="searchPlayerNotes()">
+                        </div>
                     </div>
-                    <div class="filter-buttons" style="margin-top: 10px;">
-                        <button class="filter-btn active" onclick="filterProfiles('all', this)">Tous</button>
-                        <button class="filter-btn" onclick="filterProfiles('reg-moyen', this)">🟠 Reg Moyen</button>
-                        <button class="filter-btn" onclick="filterProfiles('reg-strong', this)">🔴 Reg Strong</button>
+                    <div class="note-filters">
+                        <button class="filter-btn active" onclick="filterNotes('all', this)">Tous</button>
+                        <button class="filter-btn" onclick="filterNotes('fish', this)">Fish</button>
+                        <button class="filter-btn" onclick="filterNotes('reg', this)">Reg</button>
+                        <button class="filter-btn" onclick="filterNotes('aggro', this)">Aggro</button>
+                        <button class="filter-btn" onclick="filterNotes('nit', this)">Nit</button>
+                        <button class="filter-btn" onclick="filterNotes('autre', this)">Autre</button>
                     </div>
-                </div>
-
-                <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">📚 Fiches joueurs (<span id="playerCount">0</span>)</div>
-                    <div class="player-profiles-list" id="playerProfilesList">
-                        <div class="history-empty">Aucun joueur enregistré</div>
-                    </div>
+                    <div id="playerNotesList"></div>
                 </div>
             </div>
-            <!-- Session Notes Tab -->
-            <div id="notes" class="tab-content">
-                <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">📝 Notes de session</div>
-                    <textarea class="notes-area" id="sessionNotes" placeholder="Notes sur ta session du jour...
-- Leaks identifiés
-- Spots difficiles
-- Ajustements à faire
-- Mental game
-- Objectifs pour demain" onchange="saveSettings()"></textarea>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="settings-card">
+                    <h3>🎯 Objectifs hebdomadaires</h3>
+                    <textarea id="weeklyGoals" placeholder="Ex: 1000 games, 10h de jeu, +500€..."></textarea>
+                    <button class="btn btn-primary" style="margin-top: 15px;" onclick="saveSettings()">Sauvegarder</button>
                 </div>
 
-                <div class="session-card">
-                    <div class="session-title" style="margin-bottom: 20px;">🎯 Objectifs de la semaine</div>
-                    <textarea class="notes-area" id="weeklyGoals" placeholder="Tes objectifs hebdomadaires...
-- Technique : 
-- Volume : 
-- Bankroll : 
-- Mental : " onchange="saveSettings()"></textarea>
+                <div class="settings-card" style="margin-top: 20px;">
+                    <h3>📋 Checklist quotidienne</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox" onchange="toggleCheck(this)"> Warm-up mental</li>
+                        <li><input type="checkbox" onchange="toggleCheck(this)"> Review session précédente</li>
+                        <li><input type="checkbox" onchange="toggleCheck(this)"> Objectif du jour défini</li>
+                        <li><input type="checkbox" onchange="toggleCheck(this)"> Environnement optimal</li>
+                        <li><input type="checkbox" onchange="toggleCheck(this)"> Pause après 2h</li>
+                    </ul>
+                </div>
+
+                <div class="settings-card" style="margin-top: 20px;">
+                    <h3>📝 Notes de session</h3>
+                    <textarea id="sessionNotes" placeholder="Notes générales, leaks observés, plans d'amélioration..."></textarea>
+                    <button class="btn btn-primary" style="margin-top: 15px;" onclick="saveSettings()">Sauvegarder</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // State
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://ajebkdzoqsgbycpqcpgh.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZWJrZHpvcXNnYnljcHFjcGdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0Mzk2MDIsImV4cCI6MjA3OTAxNTYwMn0.LCPY8RrSiSKQnlcMvl_rGRDmSGyltm7ZycNW_1C_Sdo';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Global state
         let currentUser = null;
         let allSessions = [];
         let allPlayerNotes = [];
         let currentFilter = 'all';
-
-        const timers = {
+        let timers = {
             spin: { seconds: 0, interval: null, running: false },
             cash: { seconds: 0, interval: null, running: false },
             study: { seconds: 0, interval: null, running: false }
@@ -1214,10 +924,10 @@
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
             
             if (tab === 'login') {
-                document.querySelector('.auth-tab:first-child').classList.add('active');
+                document.querySelectorAll('.auth-tab')[0].classList.add('active');
                 document.getElementById('loginForm').classList.add('active');
             } else {
-                document.querySelector('.auth-tab:last-child').classList.add('active');
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
                 document.getElementById('registerForm').classList.add('active');
             }
             hideAuthError();
@@ -1235,216 +945,191 @@
 
         async function handleLogin(e) {
             e.preventDefault();
-            const btn = document.getElementById('loginBtn');
-            btn.disabled = true;
-            btn.textContent = 'Connexion...';
             hideAuthError();
-
-            const username = document.getElementById('loginUsername').value;
+            
+            const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
 
-                const data = await res.json();
-                if (data.success) {
-                    currentUser = data.user;
-                    showMainApp();
-                } else {
-                    showAuthError(data.error);
-                }
-            } catch (err) {
-                showAuthError('Erreur de connexion au serveur');
+            if (error) {
+                showAuthError('Email ou mot de passe incorrect');
+                return;
             }
 
-            btn.disabled = false;
-            btn.textContent = 'Se connecter';
+            await initApp(data.user);
         }
 
         async function handleRegister(e) {
             e.preventDefault();
-            const btn = document.getElementById('registerBtn');
-            btn.disabled = true;
-            btn.textContent = 'Création...';
             hideAuthError();
+            
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const username = document.getElementById('registerUsername').value;
 
-            const username = document.getElementById('regUsername').value;
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-
-            try {
-                const res = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password })
-                });
-
-                const data = await res.json();
-                if (data.success) {
-                    currentUser = data.user;
-                    showMainApp();
-                } else {
-                    showAuthError(data.error);
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        username: username
+                    }
                 }
-            } catch (err) {
-                showAuthError('Erreur de connexion au serveur');
+            });
+
+            if (error) {
+                showAuthError(error.message);
+                return;
             }
 
-            btn.disabled = false;
-            btn.textContent = 'Créer un compte';
+            // Create user profile
+            const { error: profileError } = await supabase
+                .from('user_profiles')
+                .insert([
+                    {
+                        user_id: data.user.id,
+                        username: username,
+                        bankroll: 0,
+                        weekly_goals: '',
+                        session_notes: ''
+                    }
+                ]);
+
+            if (profileError) {
+                console.error('Profile creation error:', profileError);
+            }
+
+            await initApp(data.user);
         }
 
-        async function handleLogout() {
-            await fetch('/api/logout', { method: 'POST' });
+        async function logout() {
+            await supabase.auth.signOut();
             currentUser = null;
+            document.getElementById('app').classList.remove('show');
             document.getElementById('authScreen').style.display = 'flex';
-            document.getElementById('mainApp').style.display = 'none';
         }
 
         async function checkAuth() {
-            try {
-                const res = await fetch('/api/me');
-                if (res.ok) {
-                    const data = await res.json();
-                    currentUser = data.user;
-                    showMainApp();
-                }
-            } catch (err) {
-                // Not logged in
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (user) {
+                await initApp(user);
+            } else {
+                document.getElementById('authScreen').style.display = 'flex';
             }
         }
 
-        function showMainApp() {
+        async function initApp(user) {
+            currentUser = user;
             document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('displayUsername').textContent = currentUser.username;
+            document.getElementById('app').classList.add('show');
+            
+            // Get username from metadata or profile
+            let username = user.user_metadata?.username || user.email;
+            
+            // Try to get from profile
+            const { data: profile } = await supabase
+                .from('user_profiles')
+                .select('username')
+                .eq('user_id', user.id)
+                .single();
+            
+            if (profile) {
+                username = profile.username;
+            }
+            
+            document.getElementById('usernameDisplay').textContent = username;
             setCurrentDate();
-            loadAllData();
+            await loadAllData();
         }
 
         // Data loading
         async function loadAllData() {
             await Promise.all([
                 loadSessions(),
-                loadBankroll(),
                 loadPlayerNotes(),
-                loadSettings(),
-                loadStats()
+                loadBankroll(),
+                loadSettings()
             ]);
+            
+            updateAllStats();
         }
 
         async function loadSessions() {
-            const res = await fetch('/api/sessions');
-            const data = await res.json();
-            allSessions = data.sessions;
+            const { data, error } = await supabase
+                .from('sessions')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('date', { ascending: false });
+            
+            if (error) {
+                console.error('Error loading sessions:', error);
+                return;
+            }
+            
+            allSessions = data || [];
             renderSessionHistory();
         }
 
-        async function loadBankroll() {
-            const res = await fetch('/api/bankroll');
-            const data = await res.json();
-            document.getElementById('currentBankroll').textContent = data.amount.toFixed(2) + '€';
-        }
-
         async function loadPlayerNotes() {
-            const res = await fetch('/api/player-notes');
-            const data = await res.json();
-            allPlayerNotes = data.notes;
+            const { data, error } = await supabase
+                .from('player_notes')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                console.error('Error loading notes:', error);
+                return;
+            }
+            
+            allPlayerNotes = data || [];
             renderPlayerNotes();
         }
 
-        async function loadSettings() {
-            const res = await fetch('/api/settings');
-            const data = await res.json();
-            if (data.settings) {
-                document.getElementById('sessionNotes').value = data.settings.session_notes || '';
-                document.getElementById('weeklyGoals').value = data.settings.weekly_goals || '';
+        async function loadBankroll() {
+            const { data, error } = await supabase
+                .from('user_profiles')
+                .select('bankroll')
+                .eq('user_id', currentUser.id)
+                .single();
+            
+            if (data) {
+                document.getElementById('currentBankroll').textContent = (data.bankroll || 0).toFixed(2) + '€';
             }
         }
 
-        async function loadStats() {
-            const res = await fetch('/api/stats');
-            const data = await res.json();
-
-            document.getElementById('weekHours').textContent = data.weekHours.toFixed(1) + 'h';
-            document.getElementById('weekGames').textContent = data.weekGames;
-            document.getElementById('weekHands').textContent = data.weekHands;
-            document.getElementById('daysCompleted').textContent = data.daysThisWeek;
-            document.getElementById('weekTotal').textContent = data.weekHours.toFixed(1) + 'h';
-
-            document.getElementById('globalHourlyRate').textContent = data.globalHourlyRate.toFixed(2) + '€';
-            document.getElementById('weekEarnings').textContent = 
-                (data.weekEarnings >= 0 ? '+' : '') + data.weekEarnings.toFixed(2) + '€';
-            document.getElementById('monthEarnings').textContent = 
-                (data.monthEarnings >= 0 ? '+' : '') + data.monthEarnings.toFixed(2) + '€';
-            document.getElementById('roiEstimate').textContent = data.weekROI.toFixed(1) + '%';
+        async function loadSettings() {
+            const { data, error } = await supabase
+                .from('user_profiles')
+                .select('weekly_goals, session_notes')
+                .eq('user_id', currentUser.id)
+                .single();
+            
+            if (data) {
+                document.getElementById('weeklyGoals').value = data.weekly_goals || '';
+                document.getElementById('sessionNotes').value = data.session_notes || '';
+            }
         }
 
         // Timer functions
-        function formatTime(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = seconds % 60;
-            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
-
-        function updateDisplay(type) {
-            const timer = timers[type];
-            document.getElementById(`${type}Timer`).textContent = formatTime(timer.seconds);
-            
-            const hours = timer.seconds / 3600;
-            let targetHours, progressId, barId, progressText;
-            
-            if (type === 'spin') {
-                targetHours = 5;
-                progressId = 'spinProgress';
-                barId = 'spinProgressBar';
-                progressText = `${hours.toFixed(1)}h / 5h`;
-            } else if (type === 'cash') {
-                targetHours = 1.5;
-                progressId = 'cashProgress';
-                barId = 'cashProgressBar';
-                progressText = `${hours.toFixed(1)}h / 1-2h`;
-            } else {
-                targetHours = 1;
-                progressId = 'studyProgress';
-                barId = 'studyProgressBar';
-                progressText = `${hours.toFixed(1)}h / 1h`;
-            }
-            
-            const percentage = Math.min((hours / targetHours) * 100, 100);
-            document.getElementById(progressId).textContent = progressText;
-            document.getElementById(barId).style.width = `${percentage}%`;
-            
-            updateSummary();
-        }
-
-        function updateSummary() {
-            const totalSeconds = timers.spin.seconds + timers.cash.seconds;
-            const totalHours = totalSeconds / 3600;
-            const totalMinutes = Math.floor((totalSeconds % 3600) / 60);
-            
-            document.getElementById('totalToday').textContent = 
-                `${Math.floor(totalHours)}h ${totalMinutes}m`;
-
-            updateSessionData();
-        }
-
         function startTimer(type) {
-            if (!timers[type].running) {
-                timers[type].running = true;
-                timers[type].interval = setInterval(() => {
-                    timers[type].seconds++;
-                    updateDisplay(type);
-                }, 1000);
-            }
+            if (timers[type].running) return;
+            
+            timers[type].running = true;
+            timers[type].interval = setInterval(() => {
+                timers[type].seconds++;
+                updateTimerDisplay(type);
+            }, 1000);
         }
 
         function pauseTimer(type) {
+            if (!timers[type].running) return;
+            
             timers[type].running = false;
             clearInterval(timers[type].interval);
         }
@@ -1452,15 +1137,46 @@
         function resetTimer(type) {
             pauseTimer(type);
             timers[type].seconds = 0;
-            updateDisplay(type);
+            updateTimerDisplay(type);
         }
 
-        // Session functions
-        function updateSessionData() {
-            const earnings = parseFloat(document.getElementById('earnings').value) || 0;
-            const totalSeconds = timers.spin.seconds + timers.cash.seconds;
-            const totalHours = totalSeconds / 3600;
+        function updateTimerDisplay(type) {
+            const seconds = timers[type].seconds;
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            
+            const display = [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
+            document.getElementById(type + 'Timer').textContent = display;
+        }
 
+        // Stats update
+        function updateAllStats() {
+            // Today stats
+            const today = new Date().toISOString().split('T')[0];
+            const todaySessions = allSessions.filter(s => s.date.startsWith(today));
+            
+            const todayGames = todaySessions.reduce((sum, s) => sum + (s.games || 0), 0);
+            const todayHours = todaySessions.reduce((sum, s) => sum + (s.play_time || 0), 0) / 3600;
+            const todayEarnings = todaySessions.reduce((sum, s) => sum + (s.earnings || 0), 0);
+            
+            document.getElementById('todayGames').textContent = todayGames;
+            document.getElementById('todayHours').textContent = todayHours.toFixed(1) + 'h';
+            document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2) + '€';
+            document.getElementById('todayEarnings').className = 'stat-value' + (todayEarnings < 0 ? ' negative' : '');
+            
+            // Total stats
+            const totalGames = allSessions.reduce((sum, s) => sum + (s.games || 0), 0);
+            const totalHands = allSessions.reduce((sum, s) => sum + (s.hands || 0), 0);
+            const totalHours = allSessions.reduce((sum, s) => sum + (s.play_time || 0), 0) / 3600;
+            const earnings = allSessions.reduce((sum, s) => sum + (s.earnings || 0), 0);
+            
+            document.getElementById('totalGames').textContent = totalGames;
+            document.getElementById('totalHands').textContent = totalHands;
+            document.getElementById('totalHours').textContent = totalHours.toFixed(1) + 'h';
+            document.getElementById('totalEarnings').textContent = earnings.toFixed(2) + '€';
+            document.getElementById('totalEarnings').className = 'stat-value' + (earnings < 0 ? ' negative' : '');
+            
             if (totalHours > 0) {
                 const hourlyRate = earnings / totalHours;
                 document.getElementById('hourlyRate').textContent = hourlyRate.toFixed(2) + '€';
@@ -1481,36 +1197,38 @@
                 return;
             }
 
-            try {
-                const res = await fetch('/api/sessions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
+            const { data, error } = await supabase
+                .from('sessions')
+                .insert([
+                    {
+                        user_id: currentUser.id,
                         date: new Date().toISOString(),
-                        playTime,
-                        studyTime,
-                        games,
-                        hands,
-                        earnings
-                    })
-                });
+                        play_time: playTime,
+                        study_time: studyTime,
+                        games: games,
+                        hands: hands,
+                        earnings: earnings
+                    }
+                ]);
 
-                if (res.ok) {
-                    alert('Session sauvegardée !');
-                    // Reset inputs
-                    document.getElementById('gamesPlayed').value = '';
-                    document.getElementById('handsPlayed').value = '';
-                    document.getElementById('earnings').value = '';
-                    resetTimer('spin');
-                    resetTimer('cash');
-                    resetTimer('study');
-                    
-                    // Reload data
-                    await loadAllData();
-                }
-            } catch (err) {
+            if (error) {
                 alert('Erreur lors de la sauvegarde');
+                console.error(error);
+                return;
             }
+
+            alert('Session sauvegardée !');
+            
+            // Reset inputs
+            document.getElementById('gamesPlayed').value = '';
+            document.getElementById('handsPlayed').value = '';
+            document.getElementById('earnings').value = '';
+            resetTimer('spin');
+            resetTimer('cash');
+            resetTimer('study');
+            
+            // Reload data
+            await loadAllData();
         }
 
         function renderSessionHistory() {
@@ -1562,227 +1280,124 @@
             const value = document.getElementById('bankrollInput').value;
             if (!value) return;
 
-            try {
-                await fetch('/api/bankroll', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ amount: parseFloat(value) })
-                });
+            const { error } = await supabase
+                .from('user_profiles')
+                .update({ bankroll: parseFloat(value) })
+                .eq('user_id', currentUser.id);
 
-                document.getElementById('currentBankroll').textContent = parseFloat(value).toFixed(2) + '€';
-                document.getElementById('bankrollInput').value = '';
-            } catch (err) {
+            if (error) {
                 alert('Erreur lors de la mise à jour');
+                console.error(error);
+                return;
             }
+
+            document.getElementById('currentBankroll').textContent = parseFloat(value).toFixed(2) + '€';
+            document.getElementById('bankrollInput').value = '';
         }
 
         // Player notes functions
-        let currentProfileFilter = 'all';
-        let editingPlayerId = null;
-
-        function checkExistingPlayer() {
-            const name = document.getElementById('playerName').value.trim().toLowerCase();
-            const statusEl = document.getElementById('playerStatus');
-            
-            if (!name) {
-                statusEl.textContent = '';
-                editingPlayerId = null;
-                clearProfileForm();
-                return;
-            }
-
-            const existing = allPlayerNotes.find(p => p.player_name.toLowerCase() === name);
-            if (existing) {
-                statusEl.textContent = '📝 Joueur existant - Les modifications mettront à jour sa fiche';
-                statusEl.style.color = '#f59e0b';
-                editingPlayerId = existing.id;
-                loadProfileToForm(existing);
-            } else {
-                statusEl.textContent = '✨ Nouveau joueur';
-                statusEl.style.color = '#10b981';
-                editingPlayerId = null;
-            }
-        }
-
-        function loadProfileToForm(profile) {
-            document.getElementById('playerLevel').value = profile.category || 'reg-moyen';
-            
-            let spots = {};
-            try {
-                spots = JSON.parse(profile.note_text || '{}');
-            } catch(e) {
-                spots = {};
-            }
-            
-            document.getElementById('spotBU').value = spots.BU || '';
-            document.getElementById('spotBBvsBU').value = spots.BBvsBU || '';
-            document.getElementById('spotBvBSB').value = spots.BvBSB || '';
-            document.getElementById('spotBvBBB').value = spots.BvBBB || '';
-            document.getElementById('spotHUSB').value = spots.HUSB || '';
-            document.getElementById('spotHUBB').value = spots.HUBB || '';
-            document.getElementById('spot3Way').value = spots.ThreeWay || '';
-        }
-
-        function clearProfileForm() {
-            document.getElementById('playerLevel').value = 'reg-moyen';
-            document.getElementById('spotBU').value = '';
-            document.getElementById('spotBBvsBU').value = '';
-            document.getElementById('spotBvBSB').value = '';
-            document.getElementById('spotBvBBB').value = '';
-            document.getElementById('spotHUSB').value = '';
-            document.getElementById('spotHUBB').value = '';
-            document.getElementById('spot3Way').value = '';
-        }
-
-        async function savePlayerProfile() {
+        async function addPlayerNote() {
             const name = document.getElementById('playerName').value.trim();
-            if (!name) {
-                alert('Veuillez entrer le nom du joueur');
+            const category = document.getElementById('noteCategory').value;
+            const text = document.getElementById('playerNoteText').value.trim();
+
+            if (!name || !text) {
+                alert('Veuillez remplir le nom et la note');
                 return;
             }
 
-            const level = document.getElementById('playerLevel').value;
-            const spots = {
-                BU: document.getElementById('spotBU').value.trim(),
-                BBvsBU: document.getElementById('spotBBvsBU').value.trim(),
-                BvBSB: document.getElementById('spotBvBSB').value.trim(),
-                BvBBB: document.getElementById('spotBvBBB').value.trim(),
-                HUSB: document.getElementById('spotHUSB').value.trim(),
-                HUBB: document.getElementById('spotHUBB').value.trim(),
-                ThreeWay: document.getElementById('spot3Way').value.trim()
-            };
+            const { data, error } = await supabase
+                .from('player_notes')
+                .insert([
+                    {
+                        user_id: currentUser.id,
+                        player_name: name,
+                        category: category,
+                        note_text: text
+                    }
+                ])
+                .select();
 
-            try {
-                let res;
-                if (editingPlayerId) {
-                    // Delete old and create new (simpler than adding PUT endpoint)
-                    await fetch(`/api/player-notes/${editingPlayerId}`, { method: 'DELETE' });
-                }
-                
-                // Create new
-                res = await fetch('/api/player-notes', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        playerName: name, 
-                        category: level,
-                        noteText: JSON.stringify(spots)
-                    })
-                });
-
-                if (res.ok) {
-                    alert(editingPlayerId ? 'Profil mis à jour !' : 'Profil créé !');
-                    document.getElementById('playerName').value = '';
-                    clearProfileForm();
-                    document.getElementById('playerStatus').textContent = '';
-                    editingPlayerId = null;
-                    await loadPlayerNotes();
-                }
-            } catch (err) {
-                alert('Erreur lors de la sauvegarde');
+            if (error) {
+                alert('Erreur lors de l\'ajout');
+                console.error(error);
+                return;
             }
+
+            allPlayerNotes.unshift(data[0]);
+            renderPlayerNotes();
+
+            document.getElementById('playerName').value = '';
+            document.getElementById('playerNoteText').value = '';
         }
 
         function renderPlayerNotes() {
-            const container = document.getElementById('playerProfilesList');
+            const container = document.getElementById('playerNotesList');
             const search = document.getElementById('searchPlayer').value.toLowerCase();
             
             let filtered = allPlayerNotes;
-            if (currentProfileFilter !== 'all') {
-                filtered = filtered.filter(p => p.category === currentProfileFilter);
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(n => n.category === currentFilter);
             }
             if (search) {
-                filtered = filtered.filter(p => p.player_name.toLowerCase().includes(search));
+                filtered = filtered.filter(n => n.player_name.toLowerCase().includes(search));
             }
 
-            document.getElementById('playerCount').textContent = filtered.length;
-
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="history-empty">Aucun joueur trouvé</div>';
+                container.innerHTML = '<div class="history-empty">Aucune note trouvée</div>';
                 return;
             }
 
-            container.innerHTML = filtered.map(profile => {
-                let spots = {};
-                try {
-                    spots = JSON.parse(profile.note_text || '{}');
-                } catch(e) {
-                    spots = {};
-                }
-                
-                const level = profile.category || 'reg-moyen';
-                const levelText = level === 'reg-strong' ? '🔴 Reg Strong' : '🟠 Reg Moyen';
-                const date = new Date(profile.created_at).toLocaleDateString('fr-FR', {
+            container.innerHTML = filtered.map(note => {
+                const date = new Date(note.created_at).toLocaleDateString('fr-FR', {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric'
                 });
 
-                const spotsList = [
-                    { key: 'BU', label: 'BU', value: spots.BU },
-                    { key: 'BBvsBU', label: 'BB vs BU', value: spots.BBvsBU },
-                    { key: 'BvBSB', label: 'BvB SB', value: spots.BvBSB },
-                    { key: 'BvBBB', label: 'BvB BB', value: spots.BvBBB },
-                    { key: 'HUSB', label: 'HU SB', value: spots.HUSB },
-                    { key: 'HUBB', label: 'HU BB', value: spots.HUBB },
-                    { key: 'ThreeWay', label: '3-Way', value: spots.ThreeWay }
-                ];
-
-                const spotsHtml = spotsList
-                    .filter(s => s.value)
-                    .map(s => `
-                        <div class="profile-spot">
-                            <div class="profile-spot-title">${s.label}</div>
-                            <div class="profile-spot-content">${s.value}</div>
-                        </div>
-                    `).join('');
-
                 return `
-                    <div class="player-profile-card ${level}">
-                        <div class="profile-header">
-                            <span class="profile-name">${profile.player_name}</span>
-                            <span class="profile-level ${level}">${levelText}</span>
+                    <div class="player-note-item">
+                        <div class="player-note-header">
+                            <span class="player-note-name">${note.player_name}</span>
+                            <div>
+                                <span class="player-note-category">${note.category}</span>
+                                <button class="delete-btn" onclick="deletePlayerNote(${note.id})">✕</button>
+                            </div>
                         </div>
-                        <div class="profile-spots">
-                            ${spotsHtml || '<div class="profile-spot-empty">Aucune note pour ce joueur</div>'}
-                        </div>
-                        <div class="profile-actions">
-                            <button class="edit-btn" onclick="editProfile('${profile.player_name}')">✏️ Modifier</button>
-                            <button class="delete-btn" onclick="deletePlayerNote(${profile.id})">🗑️ Supprimer</button>
-                        </div>
-                        <div class="profile-date">Ajouté le ${date}</div>
+                        <div class="player-note-text">${note.note_text}</div>
+                        <div class="player-note-date">${date}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        function editProfile(playerName) {
-            document.getElementById('playerName').value = playerName;
-            checkExistingPlayer();
-            document.getElementById('playerNotes').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function filterProfiles(level, btn) {
-            currentProfileFilter = level;
-            document.querySelectorAll('#playerNotes .filter-btn').forEach(b => b.classList.remove('active'));
+        function filterNotes(category, btn) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderPlayerNotes();
         }
 
-        function searchPlayerProfiles() {
+        function searchPlayerNotes() {
             renderPlayerNotes();
         }
 
         async function deletePlayerNote(id) {
-            if (!confirm('Supprimer ce joueur ?')) return;
+            if (!confirm('Supprimer cette note ?')) return;
 
-            try {
-                await fetch(`/api/player-notes/${id}`, { method: 'DELETE' });
-                allPlayerNotes = allPlayerNotes.filter(n => n.id !== id);
-                renderPlayerNotes();
-            } catch (err) {
+            const { error } = await supabase
+                .from('player_notes')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
                 alert('Erreur lors de la suppression');
+                console.error(error);
+                return;
             }
+
+            allPlayerNotes = allPlayerNotes.filter(n => n.id !== id);
+            renderPlayerNotes();
         }
 
         // Settings
@@ -1790,11 +1405,21 @@
             const weeklyGoals = document.getElementById('weeklyGoals').value;
             const sessionNotes = document.getElementById('sessionNotes').value;
 
-            await fetch('/api/settings', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ weeklyGoals, sessionNotes })
-            });
+            const { error } = await supabase
+                .from('user_profiles')
+                .update({
+                    weekly_goals: weeklyGoals,
+                    session_notes: sessionNotes
+                })
+                .eq('user_id', currentUser.id);
+
+            if (error) {
+                alert('Erreur lors de la sauvegarde');
+                console.error(error);
+                return;
+            }
+
+            alert('Paramètres sauvegardés !');
         }
 
         // UI functions
